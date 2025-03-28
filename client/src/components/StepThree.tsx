@@ -2,15 +2,16 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ComputeRequirements, UsagePattern, PlatformSelections, ProviderCostEstimate, CostEstimateRequest, CostEstimateResponse } from "@shared/types";
 import { apiRequest } from "@/lib/queryClient";
-import { ArrowLeft, RefreshCcw, FileDown, Mail, Info } from "lucide-react";
+import { ArrowLeft, RefreshCcw, FileDown, Mail, Info, BarChart3, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import CostChart from "./CostChart";
 import CostTable from "./CostTable";
+import CostBreakdownChart from "./CostBreakdownChart";
 
 interface StepThreeProps {
   computeRequirements: ComputeRequirements;
@@ -31,6 +32,7 @@ export default function StepThree({
   onPrevious,
   onReset
 }: StepThreeProps) {
+  const [viewTab, setViewTab] = useState<string>("total-cost");
   const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
   const { toast } = useToast();
   
@@ -94,31 +96,15 @@ export default function StepThree({
   
   // Determine lowest cost estimate provider
   const lowestCostEstimate = costEstimates && costEstimates.length > 0 
-    ? costEstimates[0] 
+    ? costEstimates.reduce((prev, current) => 
+        (prev.monthlyCost < current.monthlyCost) ? prev : current
+      )
     : null;
   
   return (
     <div>
-      <Card className="mb-6">
+      <Card className="mb-6 overflow-hidden">
         <CardContent className="pt-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-medium">Cost Comparison</h2>
-            <div>
-              <Select 
-                value={viewMode} 
-                onValueChange={(value) => setViewMode(value as "chart" | "table")}
-              >
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="View mode" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="chart">Chart View</SelectItem>
-                  <SelectItem value="table">Table View</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
           {isLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-[250px] w-full" />
@@ -137,15 +123,55 @@ export default function StepThree({
             </Alert>
           ) : costEstimates && costEstimates.length > 0 ? (
             <>
-              {viewMode === "chart" ? (
-                <div className="mb-6">
-                  <CostChart estimates={costEstimates} />
+              <Tabs defaultValue="total-cost" value={viewTab} onValueChange={setViewTab} className="w-full mb-6">
+                <div className="flex justify-between items-center mb-4">
+                  <TabsList>
+                    <TabsTrigger value="total-cost">Total Cost View</TabsTrigger>
+                    <TabsTrigger value="breakdown">Cost Breakdown</TabsTrigger>
+                  </TabsList>
+                  
+                  {viewTab === "total-cost" && (
+                    <div className="flex items-center space-x-2">
+                      <Button 
+                        variant={viewMode === "chart" ? "default" : "outline"} 
+                        size="sm"
+                        onClick={() => setViewMode("chart")}
+                        className="gap-1"
+                      >
+                        <BarChart3 className="h-4 w-4" />
+                        <span className="sr-only sm:not-sr-only sm:inline-block">Chart</span>
+                      </Button>
+                      <Button 
+                        variant={viewMode === "table" ? "default" : "outline"} 
+                        size="sm"
+                        onClick={() => setViewMode("table")}
+                        className="gap-1"
+                      >
+                        <TableIcon className="h-4 w-4" />
+                        <span className="sr-only sm:not-sr-only sm:inline-block">Table</span>
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="mb-6">
-                  <CostTable estimates={costEstimates} />
-                </div>
-              )}
+                
+                <TabsContent value="total-cost" className="mt-2">
+                  {viewMode === "chart" ? (
+                    <div className="mt-4">
+                      <CostChart estimates={costEstimates} />
+                    </div>
+                  ) : (
+                    <div className="mt-4">
+                      <CostTable estimates={costEstimates} />
+                    </div>
+                  )}
+                </TabsContent>
+                
+                <TabsContent value="breakdown" className="mt-2">
+                  <div className="mt-4">
+                    <CostBreakdownChart estimates={costEstimates} />
+                  </div>
+                </TabsContent>
+              </Tabs>
               
               <div className="bg-neutral-lightest p-4 rounded-lg border border-neutral-medium">
                 <div className="flex items-start">
@@ -168,10 +194,34 @@ export default function StepThree({
       {lowestCostEstimate && (
         <Card>
           <CardContent className="pt-6">
-            <h2 className="text-xl font-medium mb-4">Cost Breakdown</h2>
+            <h2 className="text-xl font-medium mb-4">Lowest Cost Option Details</h2>
             
             <div className="mb-6">
-              <h3 className="font-medium mb-2">Resource Monthly Cost Details ({lowestCostEstimate.provider.toUpperCase()} - Lowest Cost Option)</h3>
+              <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                <h3 className="font-medium mb-2 text-blue-800">
+                  {lowestCostEstimate.provider.toUpperCase()} - {lowestCostEstimate.instanceType}
+                  {lowestCostEstimate.isInterruptible && (
+                    <span className="ml-2 text-sm bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full">
+                      {lowestCostEstimate.provider === 'aws' 
+                        ? 'Spot' 
+                        : lowestCostEstimate.provider === 'gcp' 
+                          ? 'Preemptible' 
+                          : lowestCostEstimate.provider === 'azure' 
+                            ? 'Spot' 
+                            : lowestCostEstimate.provider === 'scinet' 
+                              ? 'Fixed' 
+                              : 'Grant'}
+                    </span>
+                  )}
+                </h3>
+                <p className="text-sm text-blue-700">
+                  Monthly Cost: <span className="font-bold">${lowestCostEstimate.monthlyCost.toFixed(2)}</span>
+                  {lowestCostEstimate.isInterruptible && (
+                    <span className="ml-2">• Interruption Risk: {lowestCostEstimate.interruptionRisk}</span>
+                  )}
+                </p>
+              </div>
+              
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
