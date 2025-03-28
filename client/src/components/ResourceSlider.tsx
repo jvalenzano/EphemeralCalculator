@@ -79,9 +79,17 @@ export default function ResourceSlider({
         />
       </div>
       
-      <div className="flex justify-between text-xs text-neutral-dark mt-2 relative">
+      <div className="flex justify-between text-xs text-neutral-dark mt-2 relative px-4">
         {defaultLabels.map((label, index) => {
-          const position = calculateTickPosition(label);
+          // Adjust positions to ensure they stay within boundaries
+          let position = calculateTickPosition(label);
+          
+          // Make sure first label is slightly away from left edge
+          if (index === 0) position = Math.max(position, 2);
+          
+          // Make sure last label is slightly away from right edge
+          if (index === defaultLabels.length - 1) position = Math.min(position, 98);
+          
           return (
             <div 
               key={index} 

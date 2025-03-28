@@ -118,11 +118,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-10">
+      <header className="bg-primary shadow-md sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <Cloud className="text-primary mr-2" size={24} />
-            <h1 className="text-xl md:text-2xl font-medium bg-gradient-to-r from-primary to-primary/70 text-transparent bg-clip-text">
+            <Cloud className="text-white mr-2" size={24} />
+            <h1 className="text-xl md:text-2xl font-medium text-white">
               Ephemeral Compute Cost Calculator
             </h1>
           </div>
@@ -130,11 +130,11 @@ export default function Home() {
             <Button 
               variant="ghost" 
               size="icon"
-              className="rounded-full hover:bg-primary/10" 
+              className="rounded-full hover:bg-white/10" 
               onClick={() => setHelpDialogOpen(true)}
               aria-label="Help"
             >
-              <HelpCircle className="h-6 w-6 text-primary" />
+              <HelpCircle className="h-6 w-6 text-white" />
             </Button>
           </div>
         </div>
