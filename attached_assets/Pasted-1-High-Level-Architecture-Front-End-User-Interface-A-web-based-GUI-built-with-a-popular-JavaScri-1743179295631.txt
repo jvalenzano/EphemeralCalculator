@@ -1,0 +1,149 @@
+1. High-Level Architecture
+Front End (User Interface)
+
+A web-based GUI built with a popular JavaScript framework (e.g., React, Vue.js, Angular) or a lightweight library (e.g., Svelte).
+
+Provides wizard-like, step-by-step forms and dynamic cost visualizations (e.g., bar charts, sliders, or real-time estimate displays).
+
+Back End (Application Layer)
+
+A simple REST API built with Node.js/Express, Python/Flask, or Python/FastAPI.
+
+Integrates with pricing data from cloud providers (AWS, Azure, GCP) and HPC platforms (SCINet, Cyverse), either by calling live APIs (if available) or referencing internally cached data tables.
+
+Data Layer
+
+Cloud Provider Pricing APIs where available:
+
+AWS Price List API: Access on-demand and spot instance pricing.
+
+GCP Pricing Catalog API: Provide cost references for on-demand and preemptible VMs.
+
+Azure Retail Prices Endpoint: (Beta) for Azure VM pricing.
+
+Local Config/Database for HPC or specialized platform cost data (e.g., SCINet, Cyverse) if they don’t offer an external API.
+
+Caching & Refresh mechanism to regularly update pricing data (daily, weekly, or monthly).
+
+Additional Services (Optional)
+
+Authentication/Authorization (if the tool is for internal use only).
+
+Analytics Logging to track which configurations users commonly explore.
+
+Automated Testing & CI/CD to ensure reliability when data updates or new features roll out.
+
+2. Suggested Technology Stack
+Front End
+
+React: Popular, robust ecosystem for building dynamic forms and real-time charts (e.g., with Recharts, Chart.js, or D3.js).
+
+TypeScript: Enhances code maintainability and reduces runtime bugs.
+
+UI Libraries: Material-UI (for React), Vuetify (for Vue), or Chakra UI can provide ready-made components that make layout and styling easier.
+
+Back End
+
+Node.js + Express:
+
+Lightweight, straightforward to handle REST endpoints.
+
+Ecosystem has plenty of libraries for calling external APIs.
+
+OR Python + Flask/FastAPI:
+
+Clear syntax, easy to read, and robust for small to mid-size APIs.
+
+Good for data manipulation and HPC-like scripts if needed.
+
+Database / Caching
+
+NoSQL (e.g., MongoDB) or a simple PostgreSQL/MySQL if you need to store user preferences or scenario definitions.
+
+Redis or in-memory caching to store frequently accessed pricing data and reduce external API calls.
+
+Deployment
+
+Internal servers or containers (Docker + Kubernetes) if your organization supports container-based deployments.
+
+Secure behind organizational authentication (e.g., Single Sign-On).
+
+3. Data Ingestion & Pricing Integration
+Cloud Provider Pricing APIs
+
+AWS Price List API (docs):
+
+Query Spot pricing for EC2.
+
+Filter by instance type, region, OS, etc.
+
+GCP Pricing Catalog API (docs):
+
+Retrieve on-demand and preemptible VM rates.
+
+Azure Retail Prices (docs):
+
+Still in preview or beta in some regions, but offers VM pricing.
+
+HPC & Other Platforms (SCINet, Cyverse)
+
+Likely no direct public APIs. Create a static JSON or small database table with known cost structures:
+
+For example, SCINet might have an approximate annual cost (like $19,762) or an hourly overhead.
+
+Cyverse might have usage-based rates or rely on grant-based allocations.
+
+Caching Strategy
+
+Scheduled Cron Job (daily/weekly) to fetch the latest provider pricing.
+
+Store it locally in a database or JSON file.
+
+Serve from the local store for faster user experience and to avoid hitting rate limits.
+
+4. UI/UX Design for a Frictionless Experience
+Wizard-Style Flow
+
+Step 1: Basic Info (e.g., “How many vCPUs / how much memory do you need?” “How long do you plan to run?” “Can you tolerate interruptions?”)
+
+Step 2: Platform Options (AWS, Azure, GCP, HPC) with recommended ephemeral compute configurations (Spot vs. On-Demand, Preemptible, ephemeral disks).
+
+Step 3: Estimates & Comparison (real-time or near real-time chart + table comparing approximate monthly or total job cost).
+
+Default Parameters + Quick Edits
+
+Provide sane defaults: e.g., 4 vCPUs, 16 GB RAM, 8 hours per day, preemptible/spot.
+
+Let users tweak these values with sliders or dropdowns.
+
+Recalculate automatically on change, showing cost deltas.
+
+Visual Feedback
+
+Charts to illustrate cost across providers in a bar chart or line graph.
+
+“What If” toggles for preemptible vs. on-demand, increasing concurrency, or expanding runtime.
+
+Tooltips & Contextual Help
+
+Explain ephemeral compute, spot/preemptible, HPC, etc. in short pop-ups.
+
+Provide disclaimers about potential termination or HPC usage restrictions.
+
+5. Sample Workflow & Minimal Code Snippet
+5.1 Overall Workflow
+User Visits internal URL: https://ephemeral-calculator.internal/.
+
+Step-by-Step Inputs: CPU/Memory, usage pattern (hours/day, concurrency), region, interruption tolerance.
+
+Back End Logic:
+
+Calls or references your cached pricing data.
+
+Calculates total estimated cost for each provider, factoring ephemeral discounts (spot, preemptible, etc.).
+
+Front End Render:
+
+Displays the results in a table or chart.
+
+Optionally, a link to the official calculators with pre-filled settings for deeper customization.
