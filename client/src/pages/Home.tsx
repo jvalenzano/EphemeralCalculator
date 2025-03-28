@@ -129,12 +129,12 @@ export default function Home() {
           <div>
             <Button 
               variant="ghost" 
-              size="icon"
-              className="rounded-full hover:bg-white/10" 
+              size="lg"
+              className="rounded-full hover:bg-white/10 p-2" 
               onClick={() => setHelpDialogOpen(true)}
               aria-label="Help"
             >
-              <HelpCircle className="h-6 w-6 text-white" />
+              <HelpCircle className="h-8 w-8 text-white" />
             </Button>
           </div>
         </div>

@@ -34,10 +34,10 @@ export default function HelpDialog({ open, onOpenChange, currentStep }: HelpDial
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-blue-50 border-0">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold">{stepContent.title}</DialogTitle>
-          <DialogDescription className="text-base">
+          <DialogTitle className="text-2xl font-semibold text-blue-900">{stepContent.title}</DialogTitle>
+          <DialogDescription className="text-base text-blue-700">
             Get help with understanding the options on this step
           </DialogDescription>
         </DialogHeader>
@@ -45,12 +45,12 @@ export default function HelpDialog({ open, onOpenChange, currentStep }: HelpDial
         <div className="mt-4">
           <Accordion type="single" collapsible className="w-full">
             {stepContent.content.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-lg font-medium text-neutral-dark hover:text-neutral-darkest">
+              <AccordionItem key={index} value={`item-${index}`} className="border-b border-blue-200">
+                <AccordionTrigger className="text-lg font-medium text-blue-800 hover:text-blue-900 py-4">
                   {item.heading}
                 </AccordionTrigger>
-                <AccordionContent className="text-base">
-                  <p>{item.text}</p>
+                <AccordionContent className="text-base bg-white p-4 rounded-lg mb-2 border-l-4 border-blue-500 shadow-sm">
+                  <p className="text-neutral-700">{item.text}</p>
                 </AccordionContent>
               </AccordionItem>
             ))}

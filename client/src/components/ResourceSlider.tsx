@@ -79,30 +79,15 @@ export default function ResourceSlider({
         />
       </div>
       
-      <div className="flex justify-between text-xs text-neutral-dark mt-2 relative px-4">
-        {defaultLabels.map((label, index) => {
-          // Adjust positions to ensure they stay within boundaries
-          let position = calculateTickPosition(label);
-          
-          // Make sure first label is slightly away from left edge
-          if (index === 0) position = Math.max(position, 2);
-          
-          // Make sure last label is slightly away from right edge
-          if (index === defaultLabels.length - 1) position = Math.min(position, 98);
-          
-          return (
-            <div 
-              key={index} 
-              className="absolute transform -translate-x-1/2"
-              style={{ left: `${position}%` }}
-            >
-              <div className="flex flex-col items-center">
-                <div className="h-2 w-0.5 bg-neutral-300 mb-1"></div>
-                <span>{label}</span>
-              </div>
+      <div className="mt-2 px-2 py-3 relative">
+        <div className="flex justify-between mb-1">
+          {defaultLabels.map((label, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <div className="h-2 w-0.5 bg-neutral-300 mb-1"></div>
+              <span className="text-xs text-neutral-600">{label}</span>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </div>
   );
