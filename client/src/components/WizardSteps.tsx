@@ -1,40 +1,79 @@
+import { ServerIcon, SettingsIcon, DollarSignIcon } from "lucide-react";
+
 interface WizardStepsProps {
   currentStep: number;
 }
 
 export default function WizardSteps({ currentStep }: WizardStepsProps) {
   return (
-    <div className="mb-8">
+    <div className="mb-10">
       <div className="flex items-center justify-between max-w-3xl mx-auto">
-        <div className="flex flex-col items-center">
-          <div className={`w-10 h-10 flex items-center justify-center rounded-full ${
-            currentStep >= 1 ? 'bg-primary text-white' : 'bg-neutral-medium text-neutral-dark'
-          } font-medium`}>
-            1
+        {/* Step 1 */}
+        <div className="flex flex-col items-center relative z-10">
+          <div 
+            className={`w-14 h-14 flex items-center justify-center rounded-full shadow-md border-2 transition-all duration-300 ${
+              currentStep >= 1 
+                ? 'bg-gradient-to-r from-primary to-primary/80 border-primary text-white' 
+                : 'bg-white border-neutral-300 text-neutral-500'
+            }`}
+          >
+            <ServerIcon className="h-6 w-6" />
           </div>
-          <span className="text-sm mt-2 text-center">Requirements</span>
+          <span className={`text-sm mt-3 font-medium transition-colors duration-300 ${
+            currentStep === 1 ? 'text-primary' : 'text-neutral-500'
+          }`}>Requirements</span>
         </div>
         
-        <div className={`h-2 flex-1 mx-2 ${currentStep >= 2 ? 'bg-primary' : 'bg-neutral-medium'}`}></div>
-        
-        <div className="flex flex-col items-center">
-          <div className={`w-10 h-10 flex items-center justify-center rounded-full ${
-            currentStep >= 2 ? 'bg-primary text-white' : 'bg-neutral-medium text-neutral-dark'
-          } font-medium`}>
-            2
-          </div>
-          <span className="text-sm mt-2 text-center">Platform Options</span>
+        {/* Connector 1-2 */}
+        <div className="relative flex-1 mx-4">
+          <div className="h-1 w-full absolute top-7 bg-neutral-200"></div>
+          <div 
+            className={`h-1 absolute top-7 bg-primary transition-all duration-500 ease-in-out ${
+              currentStep >= 2 ? 'w-full' : 'w-0'
+            }`}
+          ></div>
         </div>
         
-        <div className={`h-2 flex-1 mx-2 ${currentStep >= 3 ? 'bg-primary' : 'bg-neutral-medium'}`}></div>
-        
-        <div className="flex flex-col items-center">
-          <div className={`w-10 h-10 flex items-center justify-center rounded-full ${
-            currentStep >= 3 ? 'bg-primary text-white' : 'bg-neutral-medium text-neutral-dark'
-          } font-medium`}>
-            3
+        {/* Step 2 */}
+        <div className="flex flex-col items-center relative z-10">
+          <div 
+            className={`w-14 h-14 flex items-center justify-center rounded-full shadow-md border-2 transition-all duration-300 ${
+              currentStep >= 2 
+                ? 'bg-gradient-to-r from-primary to-primary/80 border-primary text-white' 
+                : 'bg-white border-neutral-300 text-neutral-500'
+            }`}
+          >
+            <SettingsIcon className="h-6 w-6" />
           </div>
-          <span className="text-sm mt-2 text-center">Cost Comparison</span>
+          <span className={`text-sm mt-3 font-medium transition-colors duration-300 ${
+            currentStep === 2 ? 'text-primary' : 'text-neutral-500'
+          }`}>Platform Options</span>
+        </div>
+        
+        {/* Connector 2-3 */}
+        <div className="relative flex-1 mx-4">
+          <div className="h-1 w-full absolute top-7 bg-neutral-200"></div>
+          <div 
+            className={`h-1 absolute top-7 bg-primary transition-all duration-500 ease-in-out ${
+              currentStep >= 3 ? 'w-full' : 'w-0'
+            }`}
+          ></div>
+        </div>
+        
+        {/* Step 3 */}
+        <div className="flex flex-col items-center relative z-10">
+          <div 
+            className={`w-14 h-14 flex items-center justify-center rounded-full shadow-md border-2 transition-all duration-300 ${
+              currentStep >= 3 
+                ? 'bg-gradient-to-r from-primary to-primary/80 border-primary text-white' 
+                : 'bg-white border-neutral-300 text-neutral-500'
+            }`}
+          >
+            <DollarSignIcon className="h-6 w-6" />
+          </div>
+          <span className={`text-sm mt-3 font-medium transition-colors duration-300 ${
+            currentStep === 3 ? 'text-primary' : 'text-neutral-500'
+          }`}>Cost Comparison</span>
         </div>
       </div>
     </div>
