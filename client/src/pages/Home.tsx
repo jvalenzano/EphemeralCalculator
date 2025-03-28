@@ -151,11 +151,11 @@ export default function Home() {
             <Button 
               variant="ghost" 
               size="lg"
-              className="rounded-full hover:bg-white/10 p-2" 
+              className="rounded-full hover:bg-white/20 p-2 transition-all duration-200 hover:scale-105" 
               onClick={() => setHelpDialogOpen(true)}
               aria-label="Help"
             >
-              <HelpCircle className="h-8 w-8 text-white" />
+              <HelpCircle className="h-9 w-9 text-white glow" />
             </Button>
           </div>
         </div>

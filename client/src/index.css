@@ -11,3 +11,9 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+@layer components {
+  .glow {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+  }
+}

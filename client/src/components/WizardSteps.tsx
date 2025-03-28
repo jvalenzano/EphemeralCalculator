@@ -8,10 +8,10 @@ export default function WizardSteps({ currentStep }: WizardStepsProps) {
   return (
     <div className="mb-10">
       <div className="flex flex-col items-center justify-center mb-2">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-blue-900">
-            Step {currentStep} of 3: {' '}
-            <span className="text-primary">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold">
+            <span className="text-blue-900">Step {currentStep} of 3:</span> {' '}
+            <span className="text-primary bg-gradient-to-r from-primary to-primary/70 text-transparent bg-clip-text">
               {currentStep === 1 ? 'Define Resource Requirements' : 
                currentStep === 2 ? 'Choose Cloud Platforms' : 
                'Review Cost Comparison'}
@@ -27,14 +27,14 @@ export default function WizardSteps({ currentStep }: WizardStepsProps) {
               currentStep > 1 
                 ? 'bg-primary/20 border-primary text-primary' 
                 : currentStep === 1
-                  ? 'bg-primary border-primary/30 text-white scale-110 ring-4 ring-primary/30'
+                  ? 'bg-primary border-primary/30 text-white scale-125 ring-4 ring-primary/30 shadow-xl shadow-primary/20'
                   : 'bg-white border-neutral-300 text-neutral-500'
             }`}
           >
             <ServerIcon className={`${currentStep === 1 ? 'h-8 w-8' : 'h-6 w-6'}`} />
           </div>
-          <span className={`text-sm mt-3 font-bold transition-colors duration-300 ${
-            currentStep === 1 ? 'text-primary text-base' : currentStep > 1 ? 'text-primary/70' : 'text-neutral-500'
+          <span className={`mt-3 font-bold transition-all duration-300 ${
+            currentStep === 1 ? 'text-primary text-base scale-110' : currentStep > 1 ? 'text-primary/70 text-sm' : 'text-neutral-500 text-sm'
           }`}>1. Requirements</span>
         </div>
         
@@ -55,14 +55,14 @@ export default function WizardSteps({ currentStep }: WizardStepsProps) {
               currentStep > 2 
                 ? 'bg-primary/20 border-primary text-primary' 
                 : currentStep === 2
-                  ? 'bg-primary border-primary/30 text-white scale-110 ring-4 ring-primary/30'
+                  ? 'bg-primary border-primary/30 text-white scale-125 ring-4 ring-primary/30 shadow-xl shadow-primary/20'
                   : 'bg-white border-neutral-300 text-neutral-500'
             }`}
           >
             <SettingsIcon className={`${currentStep === 2 ? 'h-8 w-8' : 'h-6 w-6'}`} />
           </div>
-          <span className={`text-sm mt-3 font-bold transition-colors duration-300 ${
-            currentStep === 2 ? 'text-primary text-base' : currentStep > 2 ? 'text-primary/70' : 'text-neutral-500'
+          <span className={`mt-3 font-bold transition-all duration-300 ${
+            currentStep === 2 ? 'text-primary text-base scale-110' : currentStep > 2 ? 'text-primary/70 text-sm' : 'text-neutral-500 text-sm'
           }`}>2. Platform Options</span>
         </div>
         
@@ -83,14 +83,14 @@ export default function WizardSteps({ currentStep }: WizardStepsProps) {
               currentStep > 3 
                 ? 'bg-primary/20 border-primary text-primary' 
                 : currentStep === 3
-                  ? 'bg-primary border-primary/30 text-white scale-110 ring-4 ring-primary/30'
+                  ? 'bg-primary border-primary/30 text-white scale-125 ring-4 ring-primary/30 shadow-xl shadow-primary/20'
                   : 'bg-white border-neutral-300 text-neutral-500'
             }`}
           >
             <DollarSignIcon className={`${currentStep === 3 ? 'h-8 w-8' : 'h-6 w-6'}`} />
           </div>
-          <span className={`text-sm mt-3 font-bold transition-colors duration-300 ${
-            currentStep === 3 ? 'text-primary text-base' : currentStep > 3 ? 'text-primary/70' : 'text-neutral-500'
+          <span className={`mt-3 font-bold transition-all duration-300 ${
+            currentStep === 3 ? 'text-primary text-base scale-110' : currentStep > 3 ? 'text-primary/70 text-sm' : 'text-neutral-500 text-sm'
           }`}>3. Cost Comparison</span>
         </div>
       </div>

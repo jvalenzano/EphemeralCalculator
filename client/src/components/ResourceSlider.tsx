@@ -45,7 +45,7 @@ export default function ResourceSlider({
   const tooltipContent = tooltipKey ? TOOLTIPS[tooltipKey] : null;
   
   return (
-    <div className="mb-8 bg-white p-5 rounded-lg shadow-sm border border-neutral-200 hover:shadow-md transition-shadow duration-200">
+    <div className="mb-8 bg-white p-5 rounded-lg shadow-sm border border-neutral-200 hover:shadow-md hover:border-primary/30 transition-all duration-300">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <label className="font-medium text-lg">{label}</label>
@@ -53,9 +53,9 @@ export default function ResourceSlider({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <InfoIcon className="h-4 w-4 text-neutral-400 hover:text-primary cursor-help" />
+                  <InfoIcon className="h-5 w-5 text-primary hover:text-primary-dark cursor-help transition-colors" />
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs bg-neutral-900 text-white">
+                <TooltipContent className="max-w-xs bg-primary-dark text-white p-3 text-sm shadow-lg">
                   <p>{tooltipContent}</p>
                 </TooltipContent>
               </Tooltip>
@@ -83,8 +83,8 @@ export default function ResourceSlider({
         <div className="flex justify-between mb-1">
           {defaultLabels.map((label, index) => (
             <div key={index} className="flex flex-col items-center">
-              <div className="h-2 w-0.5 bg-neutral-300 mb-1"></div>
-              <span className="text-xs text-neutral-600">{label}</span>
+              <div className="h-3 w-1 bg-neutral-400 mb-1.5"></div>
+              <span className="text-sm font-medium text-neutral-700">{label}</span>
             </div>
           ))}
         </div>
