@@ -2,7 +2,7 @@ import express, { type Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import { CloudProvider, CostEstimateRequest } from "@shared/types";
+import { CloudProvider, CostEstimateRequest, SavedConfiguration } from "@shared/types";
 import { insertCostEstimateSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -80,6 +80,179 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       return res.status(500).json({ error: 'Failed to calculate costs' });
+    }
+  });
+  
+  // Configuration management routes
+  
+  // Get all configurations
+  apiRouter.get('/configurations', async (req, res) => {
+    try {
+      const configurations = await storage.getConfigurations();
+      return res.json(configurations);
+    } catch (error) {
+      console.error('Error fetching configurations:', error);
+      return res.status(500).json({ error: 'Failed to fetch configurations' });
+    }
+  });
+  
+  // Get a specific configuration
+  apiRouter.get('/configurations/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const configuration = await storage.getConfiguration(id);
+      
+      if (!configuration) {
+        return res.status(404).json({ error: 'Configuration not found' });
+      }
+      
+      return res.json(configuration);
+    } catch (error) {
+      console.error('Error fetching configuration:', error);
+      return res.status(500).json({ error: 'Failed to fetch configuration' });
+    }
+  });
+  
+  // Save a new configuration
+  apiRouter.post('/configurations', async (req, res) => {
+    try {
+      // Validate request body
+      const configSchema = z.object({
+        name: z.string().min(1).max(100),
+        description: z.string().max(500).optional(),
+        computeRequirements: z.object({
+          cpuCount: z.number().int().min(1).max(64),
+          memorySize: z.number().int().min(1).max(256),
+          storageSize: z.number().int().min(10).max(1000)
+        }),
+        usagePattern: z.object({
+          hoursPerDay: z.number().int().min(1).max(24),
+          daysPerMonth: z.number().int().min(1).max(31),
+          isInterruptible: z.boolean()
+        }),
+        platformSelections: z.object({
+          selectedPlatforms: z.array(z.enum(['aws', 'gcp', 'azure', 'scinet', 'cyverse'])),
+          region: z.enum(['us-east', 'us-west', 'eu-west', 'ap-southeast'])
+        })
+      });
+      
+      const validatedData = configSchema.parse(req.body);
+      const savedConfig = await storage.saveConfiguration(validatedData);
+      
+      return res.status(201).json(savedConfig);
+    } catch (error) {
+      console.error('Error saving configuration:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Invalid input', details: error.errors });
+      }
+      
+      return res.status(500).json({ error: 'Failed to save configuration' });
+    }
+  });
+  
+  // Update an existing configuration
+  apiRouter.patch('/configurations/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Validate request body
+      const updateConfigSchema = z.object({
+        name: z.string().min(1).max(100).optional(),
+        description: z.string().max(500).optional(),
+        computeRequirements: z.object({
+          cpuCount: z.number().int().min(1).max(64),
+          memorySize: z.number().int().min(1).max(256),
+          storageSize: z.number().int().min(10).max(1000)
+        }).optional(),
+        usagePattern: z.object({
+          hoursPerDay: z.number().int().min(1).max(24),
+          daysPerMonth: z.number().int().min(1).max(31),
+          isInterruptible: z.boolean()
+        }).optional(),
+        platformSelections: z.object({
+          selectedPlatforms: z.array(z.enum(['aws', 'gcp', 'azure', 'scinet', 'cyverse'])),
+          region: z.enum(['us-east', 'us-west', 'eu-west', 'ap-southeast'])
+        }).optional()
+      });
+      
+      const validatedData = updateConfigSchema.parse(req.body);
+      const updatedConfig = await storage.updateConfiguration(id, validatedData);
+      
+      if (!updatedConfig) {
+        return res.status(404).json({ error: 'Configuration not found' });
+      }
+      
+      return res.json(updatedConfig);
+    } catch (error) {
+      console.error('Error updating configuration:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Invalid input', details: error.errors });
+      }
+      
+      return res.status(500).json({ error: 'Failed to update configuration' });
+    }
+  });
+  
+  // Update an existing configuration (PUT endpoint for complete replacement)
+  apiRouter.put('/configurations/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Validate request body
+      const configSchema = z.object({
+        name: z.string().min(1).max(100),
+        description: z.string().max(500).optional(),
+        computeRequirements: z.object({
+          cpuCount: z.number().int().min(1).max(64),
+          memorySize: z.number().int().min(1).max(256),
+          storageSize: z.number().int().min(10).max(1000)
+        }),
+        usagePattern: z.object({
+          hoursPerDay: z.number().int().min(1).max(24),
+          daysPerMonth: z.number().int().min(1).max(31),
+          isInterruptible: z.boolean()
+        }),
+        platformSelections: z.object({
+          selectedPlatforms: z.array(z.enum(['aws', 'gcp', 'azure', 'scinet', 'cyverse'])),
+          region: z.enum(['us-east', 'us-west', 'eu-west', 'ap-southeast'])
+        })
+      });
+      
+      const validatedData = configSchema.parse(req.body);
+      const updatedConfig = await storage.updateConfiguration(id, validatedData);
+      
+      if (!updatedConfig) {
+        return res.status(404).json({ error: 'Configuration not found' });
+      }
+      
+      return res.json(updatedConfig);
+    } catch (error) {
+      console.error('Error updating configuration:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Invalid input', details: error.errors });
+      }
+      
+      return res.status(500).json({ error: 'Failed to update configuration' });
+    }
+  });
+  
+  // Delete a configuration
+  apiRouter.delete('/configurations/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteConfiguration(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: 'Configuration not found' });
+      }
+      
+      return res.status(204).end();
+    } catch (error) {
+      console.error('Error deleting configuration:', error);
+      return res.status(500).json({ error: 'Failed to delete configuration' });
     }
   });
   

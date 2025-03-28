@@ -5,9 +5,10 @@ import StepOne from "@/components/StepOne";
 import StepTwo from "@/components/StepTwo";
 import StepThree from "@/components/StepThree";
 import HelpDialog from "@/components/HelpDialog";
-import { ComputeRequirements, UsagePattern, PlatformSelections, ProviderCostEstimate, WizardState } from "@shared/types";
+import { ComputeRequirements, UsagePattern, PlatformSelections, ProviderCostEstimate, WizardState, SavedConfiguration } from "@shared/types";
 import { PLATFORMS } from "@shared/constants";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const [state, setState] = useState<WizardState>({
@@ -31,6 +32,9 @@ export default function Home() {
   
   // State for help dialog
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  
+  // Toast hook for notifications
+  const { toast } = useToast();
 
   const updateComputeRequirements = (updates: Partial<ComputeRequirements>) => {
     setState(prev => ({
@@ -114,6 +118,23 @@ export default function Home() {
       costEstimates: null
     });
   };
+  
+  // Function to load a saved configuration
+  const loadConfiguration = (config: SavedConfiguration) => {
+    setState(prev => ({
+      ...prev,
+      computeRequirements: config.computeRequirements,
+      usagePattern: config.usagePattern,
+      platformSelections: config.platformSelections,
+      costEstimates: null, // Reset cost estimates to trigger a new calculation
+      currentStep: 3 // Go to the final step for cost calculation
+    }));
+    
+    toast({
+      title: "Configuration Loaded",
+      description: `"${config.name}" has been loaded successfully.`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col">
@@ -175,6 +196,7 @@ export default function Home() {
               onCostEstimatesChange={updateCostEstimates}
               onPrevious={goToPreviousStep}
               onReset={resetWizard}
+              onLoadConfiguration={loadConfiguration}
             />
           )}
         </div>

@@ -3,11 +3,18 @@ import {
   cloudPricing, type CloudPricing, type InsertCloudPricing,
   costEstimates, type CostEstimate, type InsertCostEstimate
 } from "@shared/schema";
-import { CloudProvider, CostEstimateRequest, CostEstimateResponse, ProviderCostEstimate } from "@shared/types";
+import { 
+  CloudProvider, 
+  CostEstimateRequest, 
+  CostEstimateResponse, 
+  ProviderCostEstimate,
+  SavedConfiguration
+} from "@shared/types";
 import { awsGetPricing } from "./pricing/awsPricing";
 import { gcpGetPricing } from "./pricing/gcpPricing";
 import { azureGetPricing } from "./pricing/azurePricing";
 import { hpcGetPricing } from "./pricing/hpcPricing";
+import crypto from "crypto";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -24,12 +31,20 @@ export interface IStorage {
   // Cost estimation methods
   calculateCosts(request: CostEstimateRequest): Promise<CostEstimateResponse>;
   saveCostEstimate(estimate: InsertCostEstimate): Promise<CostEstimate>;
+  
+  // Configuration management methods
+  getConfigurations(): Promise<SavedConfiguration[]>;
+  getConfiguration(id: string): Promise<SavedConfiguration | undefined>;
+  saveConfiguration(configuration: Omit<SavedConfiguration, 'id' | 'createdAt'>): Promise<SavedConfiguration>;
+  updateConfiguration(id: string, configuration: Partial<Omit<SavedConfiguration, 'id' | 'createdAt'>>): Promise<SavedConfiguration | undefined>;
+  deleteConfiguration(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private cloudPricing: Map<string, CloudPricing>; // key = provider:region:instanceType
   private costEstimates: Map<number, CostEstimate>;
+  private savedConfigurations: Map<string, SavedConfiguration>; // key = id
   currentUserId: number;
   currentPricingId: number;
   currentEstimateId: number;
@@ -38,6 +53,7 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.cloudPricing = new Map();
     this.costEstimates = new Map();
+    this.savedConfigurations = new Map();
     this.currentUserId = 1;
     this.currentPricingId = 1;
     this.currentEstimateId = 1;
@@ -108,7 +124,13 @@ export class MemStorage implements IStorage {
   
   async updatePricing(insertPricing: InsertCloudPricing): Promise<CloudPricing> {
     const id = this.currentPricingId++;
-    const pricing: CloudPricing = { ...insertPricing, id };
+    const pricing: CloudPricing = { 
+      ...insertPricing, 
+      id,
+      spotHourly: insertPricing.spotHourly ?? null,
+      storageGbMonthly: insertPricing.storageGbMonthly ?? null,
+      networkEgressGbCost: insertPricing.networkEgressGbCost ?? null
+    };
     const key = `${pricing.provider}:${pricing.region}:${pricing.instanceType}`;
     this.cloudPricing.set(key, pricing);
     return pricing;
@@ -232,6 +254,45 @@ export class MemStorage implements IStorage {
     const estimate: CostEstimate = { ...insertEstimate, id };
     this.costEstimates.set(id, estimate);
     return estimate;
+  }
+  
+  // Configuration management methods
+  async getConfigurations(): Promise<SavedConfiguration[]> {
+    return Array.from(this.savedConfigurations.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+  
+  async getConfiguration(id: string): Promise<SavedConfiguration | undefined> {
+    return this.savedConfigurations.get(id);
+  }
+  
+  async saveConfiguration(config: Omit<SavedConfiguration, 'id' | 'createdAt'>): Promise<SavedConfiguration> {
+    const id = crypto.randomUUID();
+    const createdAt = new Date().toISOString();
+    const savedConfig: SavedConfiguration = { ...config, id, createdAt };
+    this.savedConfigurations.set(id, savedConfig);
+    return savedConfig;
+  }
+  
+  async updateConfiguration(
+    id: string, 
+    config: Partial<Omit<SavedConfiguration, 'id' | 'createdAt'>>
+  ): Promise<SavedConfiguration | undefined> {
+    const existingConfig = this.savedConfigurations.get(id);
+    if (!existingConfig) return undefined;
+    
+    const updatedConfig: SavedConfiguration = { 
+      ...existingConfig,
+      ...config
+    };
+    
+    this.savedConfigurations.set(id, updatedConfig);
+    return updatedConfig;
+  }
+  
+  async deleteConfiguration(id: string): Promise<boolean> {
+    return this.savedConfigurations.delete(id);
   }
 }
 

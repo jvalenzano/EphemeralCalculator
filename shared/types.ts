@@ -80,3 +80,14 @@ export interface WizardState {
   platformSelections: PlatformSelections;
   costEstimates: ProviderCostEstimate[] | null;
 }
+
+// Saved configurations
+export interface SavedConfiguration {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  computeRequirements: ComputeRequirements;
+  usagePattern: UsagePattern;
+  platformSelections: PlatformSelections;
+}

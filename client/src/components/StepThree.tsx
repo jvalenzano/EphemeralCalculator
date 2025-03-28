@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ComputeRequirements, UsagePattern, PlatformSelections, ProviderCostEstimate, CostEstimateRequest, CostEstimateResponse } from "@shared/types";
+import { ComputeRequirements, UsagePattern, PlatformSelections, ProviderCostEstimate, CostEstimateRequest, CostEstimateResponse, SavedConfiguration } from "@shared/types";
 import { apiRequest } from "@/lib/queryClient";
 import { ArrowLeft, RefreshCcw, FileDown, Mail, Info, BarChart3, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import CostChart from "./CostChart";
 import CostTable from "./CostTable";
 import CostBreakdownChart from "./CostBreakdownChart";
 import PricingInfoDialog from "./PricingInfoDialog";
+import SavedConfigsDialog from "./SavedConfigsDialog";
 
 interface StepThreeProps {
   computeRequirements: ComputeRequirements;
@@ -22,6 +23,7 @@ interface StepThreeProps {
   onCostEstimatesChange: (estimates: ProviderCostEstimate[] | null) => void;
   onPrevious: () => void;
   onReset: () => void;
+  onLoadConfiguration?: (config: SavedConfiguration) => void;
 }
 
 export default function StepThree({
@@ -31,7 +33,8 @@ export default function StepThree({
   costEstimates,
   onCostEstimatesChange,
   onPrevious,
-  onReset
+  onReset,
+  onLoadConfiguration
 }: StepThreeProps) {
   const [viewTab, setViewTab] = useState<string>("total-cost");
   const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
@@ -53,8 +56,11 @@ export default function StepThree({
   const { data, isLoading, error } = useQuery<CostEstimateResponse, Error>({
     queryKey: ['/api/calculate', JSON.stringify(requestPayload)],
     queryFn: async () => {
-      const response = await apiRequest('POST', '/api/calculate', requestPayload);
-      return response.json();
+      return await apiRequest({
+        url: '/api/calculate',
+        method: 'POST',
+        body: requestPayload
+      });
     }
   });
   
@@ -292,11 +298,23 @@ export default function StepThree({
         </Card>
       )}
       
-      <div className="mt-6 flex justify-between">
-        <Button variant="outline" onClick={onPrevious} className="flex items-center">
-          <ArrowLeft className="mr-1 h-4 w-4" />
-          Back
-        </Button>
+      <div className="mt-6 flex justify-between items-center">
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onPrevious} className="flex items-center">
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            Back
+          </Button>
+          
+          {onLoadConfiguration && (
+            <SavedConfigsDialog
+              computeRequirements={computeRequirements}
+              usagePattern={usagePattern}
+              platformSelections={platformSelections}
+              onLoadConfiguration={onLoadConfiguration}
+            />
+          )}
+        </div>
+        
         <Button onClick={onReset} className="flex items-center">
           Start Over
           <RefreshCcw className="ml-1 h-4 w-4" />
