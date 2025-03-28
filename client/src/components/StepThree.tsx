@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import CostChart from "./CostChart";
 import CostTable from "./CostTable";
 import CostBreakdownChart from "./CostBreakdownChart";
+import PricingInfoDialog from "./PricingInfoDialog";
 
 interface StepThreeProps {
   computeRequirements: ComputeRequirements;
@@ -178,7 +179,10 @@ export default function StepThree({
                   <Info className="text-warning h-5 w-5 mr-2 mt-0.5" />
                   <div>
                     <h4 className="font-medium mb-1">Disclaimer</h4>
-                    <p className="text-sm text-neutral-dark">These estimates are based on current pricing as of today and may vary. Actual costs depend on real usage patterns and potential price changes by service providers.</p>
+                    <p className="text-sm text-neutral-dark mb-2">These estimates are based on current pricing as of today and may vary. Actual costs depend on real usage patterns and potential price changes by service providers.</p>
+                    <div className="flex justify-end">
+                      <PricingInfoDialog />
+                    </div>
                   </div>
                 </div>
               </div>
