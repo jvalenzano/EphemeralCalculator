@@ -177,15 +177,15 @@ export default function SavedConfigsDialog({
     const platformCount = config.platformSelections.selectedPlatforms.length;
 
     return (
-      <Card key={config.id} className="mb-4 border border-green-200 bg-green-50 hover:shadow-lg transition-all duration-300 shadow-sm">
-        <CardHeader className="pb-2 border-b border-green-200">
+      <Card key={config.id} className="mb-4 border border-blue-200 bg-blue-50 hover:shadow-lg transition-all duration-300 shadow-sm">
+        <CardHeader className="pb-2 border-b border-blue-200">
           <div className="flex justify-between items-start">
-            <CardTitle className="text-lg font-bold text-green-900">{config.name}</CardTitle>
+            <CardTitle className="text-lg font-bold text-blue-900">{config.name}</CardTitle>
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="h-8 w-8 p-0 border-green-300 bg-white hover:bg-green-100 hover:text-green-700" 
+                className="h-8 w-8 p-0 border-blue-300 bg-white hover:bg-blue-100 hover:text-blue-700" 
                 onClick={() => startEdit(config)}
               >
                 <Edit2 className="h-4 w-4" />
@@ -202,26 +202,26 @@ export default function SavedConfigsDialog({
               </Button>
             </div>
           </div>
-          <CardDescription className="text-xs flex items-center mt-1 text-green-700">
+          <CardDescription className="text-xs flex items-center mt-1 text-blue-700">
             <Clock className="h-3 w-3 mr-1" /> Created {formattedDate}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-sm pb-2 pt-3">
           {config.description && (
-            <p className="text-green-800 mb-3 bg-white p-2 rounded border border-green-100 italic">{config.description}</p>
+            <p className="text-blue-800 mb-3 bg-white p-2 rounded border border-blue-100 italic">{config.description}</p>
           )}
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="bg-white p-2 rounded border border-green-100">
-              <h3 className="font-semibold text-green-900 mb-1 pb-1 border-b border-green-50">Compute Requirements</h3>
-              <p className="text-green-800"><strong>CPU:</strong> {config.computeRequirements.cpuCount} cores</p>
-              <p className="text-green-800"><strong>Memory:</strong> {config.computeRequirements.memorySize} GB</p>
-              <p className="text-green-800"><strong>Storage:</strong> {config.computeRequirements.storageSize} GB</p>
+            <div className="bg-white p-2 rounded border border-blue-100">
+              <h3 className="font-semibold text-blue-900 mb-1 pb-1 border-b border-blue-50">Compute Requirements</h3>
+              <p className="text-blue-800"><strong>CPU:</strong> {config.computeRequirements.cpuCount} cores</p>
+              <p className="text-blue-800"><strong>Memory:</strong> {config.computeRequirements.memorySize} GB</p>
+              <p className="text-blue-800"><strong>Storage:</strong> {config.computeRequirements.storageSize} GB</p>
             </div>
-            <div className="bg-white p-2 rounded border border-green-100">
-              <h3 className="font-semibold text-green-900 mb-1 pb-1 border-b border-green-50">Usage & Platforms</h3>
-              <p className="text-green-800"><strong>Usage:</strong> {config.usagePattern.hoursPerDay} hrs/day, {config.usagePattern.daysPerMonth} days/month</p>
-              <p className="text-green-800"><strong>Interruptible:</strong> {config.usagePattern.isInterruptible ? "Yes" : "No"}</p>
-              <p className="text-green-800"><strong>Platforms:</strong> {platformCount} selected</p>
+            <div className="bg-white p-2 rounded border border-blue-100">
+              <h3 className="font-semibold text-blue-900 mb-1 pb-1 border-b border-blue-50">Usage & Platforms</h3>
+              <p className="text-blue-800"><strong>Usage:</strong> {config.usagePattern.hoursPerDay} hrs/day, {config.usagePattern.daysPerMonth} days/month</p>
+              <p className="text-blue-800"><strong>Interruptible:</strong> {config.usagePattern.isInterruptible ? "Yes" : "No"}</p>
+              <p className="text-blue-800"><strong>Platforms:</strong> {platformCount} selected</p>
             </div>
           </div>
         </CardContent>
@@ -251,29 +251,29 @@ export default function SavedConfigsDialog({
             Saved Configs
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto bg-green-100 border-green-300">
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto bg-blue-50 border-0">
           <DialogHeader className="pb-4">
-            <DialogTitle className="text-2xl font-bold text-green-900">Saved Configurations</DialogTitle>
-            <DialogDescription className="text-green-800">
+            <DialogTitle className="text-2xl font-bold text-blue-900">Saved Configurations</DialogTitle>
+            <DialogDescription className="text-blue-700">
               Load previously saved configurations or save your current settings.
             </DialogDescription>
           </DialogHeader>
           
           <Tabs defaultValue="saved" className="mt-4">
-            <TabsList className="grid w-full grid-cols-2 bg-green-200 p-1 dark:bg-green-800">
-              <TabsTrigger value="saved" className="data-[state=active]:bg-white data-[state=active]:text-green-900 data-[state=active]:shadow-md">Saved Configurations</TabsTrigger>
-              <TabsTrigger value="current" className="data-[state=active]:bg-white data-[state=active]:text-green-900 data-[state=active]:shadow-md">Current Configuration</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 bg-blue-200 p-1 dark:bg-blue-800">
+              <TabsTrigger value="saved" className="data-[state=active]:bg-white data-[state=active]:text-blue-900 data-[state=active]:shadow-md">Saved Configurations</TabsTrigger>
+              <TabsTrigger value="current" className="data-[state=active]:bg-white data-[state=active]:text-blue-900 data-[state=active]:shadow-md">Current Configuration</TabsTrigger>
             </TabsList>
             
             <TabsContent value="saved" className="mt-4">
               {loading ? (
-                <div className="text-center py-10 rounded-md bg-green-50 border-2 border-dashed border-green-300 shadow-inner">
-                  <p className="text-green-800 text-lg">Loading saved configurations...</p>
-                  <div className="mt-3 inline-block h-8 w-8 animate-spin rounded-full border-4 border-green-300 border-t-green-600"></div>
+                <div className="text-center py-10 rounded-md bg-blue-50 border-2 border-dashed border-blue-300 shadow-inner">
+                  <p className="text-blue-800 text-lg">Loading saved configurations...</p>
+                  <div className="mt-3 inline-block h-8 w-8 animate-spin rounded-full border-4 border-blue-300 border-t-blue-600"></div>
                 </div>
               ) : configs.length === 0 ? (
-                <div className="text-center py-10 rounded-md bg-green-50 border-2 border-dashed border-green-300 shadow-inner">
-                  <p className="text-green-800 mb-3 text-lg">No saved configurations yet</p>
+                <div className="text-center py-10 rounded-md bg-blue-50 border-2 border-dashed border-blue-300 shadow-inner">
+                  <p className="text-blue-800 mb-3 text-lg">No saved configurations yet</p>
                   <Button 
                     variant="default" 
                     className="bg-primary hover:bg-primary/90 text-white shadow-md"
@@ -312,33 +312,33 @@ export default function SavedConfigsDialog({
             </TabsContent>
             
             <TabsContent value="current" className="mt-4">
-              <Card className="bg-green-50 border-green-200 shadow">
-                <CardHeader className="pb-2 border-b border-green-200">
-                  <CardTitle className="text-green-900 font-bold">Current Configuration Details</CardTitle>
+              <Card className="bg-blue-50 border-blue-200 shadow">
+                <CardHeader className="pb-2 border-b border-blue-200">
+                  <CardTitle className="text-blue-900 font-bold">Current Configuration Details</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm pt-4">
                   <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <div className="bg-white p-3 rounded-md shadow-sm border border-green-100">
-                        <h3 className="font-semibold text-green-900 mb-2 text-base">Compute Requirements</h3>
-                        <p className="text-green-800"><strong>CPU:</strong> {computeRequirements.cpuCount} cores</p>
-                        <p className="text-green-800"><strong>Memory:</strong> {computeRequirements.memorySize} GB</p>
-                        <p className="text-green-800"><strong>Storage:</strong> {computeRequirements.storageSize} GB</p>
+                      <div className="bg-white p-3 rounded-md shadow-sm border border-blue-100">
+                        <h3 className="font-semibold text-blue-900 mb-2 text-base">Compute Requirements</h3>
+                        <p className="text-blue-800"><strong>CPU:</strong> {computeRequirements.cpuCount} cores</p>
+                        <p className="text-blue-800"><strong>Memory:</strong> {computeRequirements.memorySize} GB</p>
+                        <p className="text-blue-800"><strong>Storage:</strong> {computeRequirements.storageSize} GB</p>
                       </div>
                       
-                      <div className="bg-white p-3 rounded-md shadow-sm border border-green-100">
-                        <h3 className="font-semibold text-green-900 mb-2 text-base">Usage Pattern</h3>
-                        <p className="text-green-800"><strong>Hours per day:</strong> {usagePattern.hoursPerDay}</p>
-                        <p className="text-green-800"><strong>Days per month:</strong> {usagePattern.daysPerMonth}</p>
-                        <p className="text-green-800"><strong>Interruptible:</strong> {usagePattern.isInterruptible ? "Yes" : "No"}</p>
+                      <div className="bg-white p-3 rounded-md shadow-sm border border-blue-100">
+                        <h3 className="font-semibold text-blue-900 mb-2 text-base">Usage Pattern</h3>
+                        <p className="text-blue-800"><strong>Hours per day:</strong> {usagePattern.hoursPerDay}</p>
+                        <p className="text-blue-800"><strong>Days per month:</strong> {usagePattern.daysPerMonth}</p>
+                        <p className="text-blue-800"><strong>Interruptible:</strong> {usagePattern.isInterruptible ? "Yes" : "No"}</p>
                       </div>
                     </div>
                     
-                    <div className="bg-white p-3 rounded-md shadow-sm border border-green-100 h-fit">
-                      <h3 className="font-semibold text-green-900 mb-2 text-base">Selected Platforms</h3>
-                      <p className="text-green-800"><strong>Count:</strong> {platformSelections.selectedPlatforms.length}</p>
-                      <p className="text-green-800"><strong>Platforms:</strong> {platformSelections.selectedPlatforms.join(", ")}</p>
-                      <p className="text-green-800"><strong>Region:</strong> {platformSelections.region}</p>
+                    <div className="bg-white p-3 rounded-md shadow-sm border border-blue-100 h-fit">
+                      <h3 className="font-semibold text-blue-900 mb-2 text-base">Selected Platforms</h3>
+                      <p className="text-blue-800"><strong>Count:</strong> {platformSelections.selectedPlatforms.length}</p>
+                      <p className="text-blue-800"><strong>Platforms:</strong> {platformSelections.selectedPlatforms.join(", ")}</p>
+                      <p className="text-blue-800"><strong>Region:</strong> {platformSelections.region}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -364,18 +364,18 @@ export default function SavedConfigsDialog({
 
       {/* Save Configuration Dialog */}
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-green-100 border-green-300">
+        <DialogContent className="sm:max-w-[425px] bg-blue-50 border-0">
           <DialogHeader className="pb-4">
-            <DialogTitle className="text-2xl font-bold text-green-900">
+            <DialogTitle className="text-2xl font-bold text-blue-900">
               {editMode ? "Edit Configuration" : "Save Configuration"}
             </DialogTitle>
-            <DialogDescription className="text-green-800">
+            <DialogDescription className="text-blue-700">
               {editMode ? "Update your saved configuration." : "Save your current configuration for future use."}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-5 bg-white p-4 rounded-md shadow-sm">
             <div className="space-y-2">
-              <Label htmlFor="config-name" className="text-green-900 font-medium">
+              <Label htmlFor="config-name" className="text-blue-900 font-medium">
                 Configuration Name <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -383,11 +383,11 @@ export default function SavedConfigsDialog({
                 value={configName}
                 onChange={(e) => setConfigName(e.target.value)}
                 placeholder="Enter a name for this configuration"
-                className="border-green-200 focus-visible:ring-green-500"
+                className="border-blue-200 focus-visible:ring-blue-500"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="config-description" className="text-green-900 font-medium">
+              <Label htmlFor="config-description" className="text-blue-900 font-medium">
                 Description (Optional)
               </Label>
               <Textarea
@@ -396,14 +396,14 @@ export default function SavedConfigsDialog({
                 onChange={(e) => setConfigDescription(e.target.value)}
                 placeholder="Add an optional description"
                 rows={3}
-                className="border-green-200 focus-visible:ring-green-500"
+                className="border-blue-200 focus-visible:ring-blue-500"
               />
             </div>
           </div>
           <DialogFooter className="flex justify-between items-center pt-4">
             <Button 
               variant="outline" 
-              className="border-green-300 text-green-700 hover:bg-green-50"
+              className="border-blue-300 text-blue-700 hover:bg-blue-50"
               onClick={() => {
                 setSaveDialogOpen(false);
                 setEditMode(null);

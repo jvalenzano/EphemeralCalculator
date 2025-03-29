@@ -110,7 +110,7 @@ export default function StepTwo({
                   </div>
                 )}
                 {platform.id === 'scinet' && (
-                  <div className="mt-3 px-3 py-2 bg-green-50 border-l-2 border-green-400 text-xs text-green-800 rounded">
+                  <div className="mt-3 px-3 py-2 bg-blue-50 border-l-2 border-blue-400 text-xs text-blue-800 rounded">
                     SCINet offers specialized research computing resources for scientific workloads
                   </div>
                 )}
