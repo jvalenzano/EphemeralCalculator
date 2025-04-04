@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite client",
-    "build": "tsc && vite build client",
+    "build": "vite build client",
     "preview": "vite preview client",
-    "start": "NODE_ENV=production node dist/index.js"
+    "start": "NODE_ENV=production node dist/server/index.js",
+    "vercel-build": "vite build client"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
