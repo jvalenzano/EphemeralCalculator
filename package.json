@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite client",
-    "build": "vite build client && tsc --project tsconfig.json",
-    "preview": "vite preview client",
-    "start": "node dist/server/index.js",
-    "vercel-build": "npm run build"
+      "build": "vite build client && tsc --project tsconfig.json",
+      "vercel-build": "npm run build",
+      "start": "node dist/server/index.js"
+    }
   },
-  "dependencies": {
+    "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
