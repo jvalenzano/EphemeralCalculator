@@ -1,26 +1,12 @@
-import { Switch, Route } from "wouter";
+// App.tsx with relative imports
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import NotFound from "@/pages/not-found";
-import Home from "@/pages/Home";
+import Home from "./pages/Home"; // Use relative path instead of @/pages/Home
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <Home />
     </QueryClientProvider>
   );
 }
-
-export default App;
